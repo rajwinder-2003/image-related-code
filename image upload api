@@ -1,0 +1,41 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+
+const ImageUpload = () => {
+  const [file, setFile] = useState(null);
+  const [uploaded, setUploaded] = useState(false);
+
+  const handleFileUpload = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const handleUpload = async () => {
+    if (!file) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+      await axios.post('/api/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      setUploaded(true);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  return (
+    <div>
+      <input type="file" onChange={handleFileUpload} />
+      <button onClick={handleUpload}>Upload</button>
+      {uploaded && <p>Image uploaded successfully!</p>}
+    </div>
+  );
+};
+
+export default ImageUpload;
