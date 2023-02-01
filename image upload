@@ -1,0 +1,21 @@
+import React, { useState } from 'react';
+
+const ImageArray = () => {
+  const [images, setImages] = useState([]);
+
+  const handleFileUpload = (e) => {
+    const newImages = [...images, URL.createObjectURL(e.target.files[0])];
+    setImages(newImages);
+  };
+
+  return (
+    <div>
+      <input type="file" onChange={handleFileUpload} />
+      {images.map((image, index) => (
+        <img key={index} src={image} />
+      ))}
+    </div>
+  );
+};
+
+export default ImageArray;
