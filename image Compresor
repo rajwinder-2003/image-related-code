@@ -1,0 +1,46 @@
+import React, { useState } from "react";
+
+const ImageCompressor = () => {
+	const [file, setFile] = useState(null);
+	const [compressedImage, setCompressedImage] = useState(null);
+
+	const handleFileChange = (e) => {
+		setFile(e.target.files[0]);
+	};
+
+	const handleCompress = () => {
+		const canvas = document.createElement("canvas");
+		const ctx = canvas.getContext("2d");
+		const img = new Image();
+		img.src = URL.createObjectURL(file);
+		img.onload = function () {
+			canvas.width = img.width;
+			canvas.height = img.height;
+			ctx.drawImage(img, 0, 0, img.width, img.height);
+			setCompressedImage(canvas.toDataURL("image/jpeg", 0.1));
+		};
+	};
+
+	const handleDownload = (compressedImage) => {
+		const link = document.createElement("a");
+		link.download = "compresed-image" + ".jpeg";
+		link.href = compressedImage;
+		link.click();
+	};
+
+	return (
+		<div>
+			<input type="file" onChange={handleFileChange} />
+			<button onClick={handleCompress}>Compress</button>
+			{compressedImage && (
+				<>
+					<img className="w-40 h-20" src={compressedImage} alt="Compressed Image" />
+					<button onClick={() => handleDownload(compressedImage)}>Download</button>
+				</>
+			)}
+
+		</div>
+	);
+};
+
+export default ImageCompressor;
